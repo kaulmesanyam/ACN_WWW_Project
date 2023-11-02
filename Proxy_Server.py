@@ -21,6 +21,7 @@ def handle_client(client_socket):
 
         response = server_socket.recv(4096)
         while response:
+            print(response)
             client_socket.sendall(response)
             response = server_socket.recv(4096)
 
