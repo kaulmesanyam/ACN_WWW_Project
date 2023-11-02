@@ -1,19 +1,8 @@
-# import urllib.request
-#
-# localhost = 'http://localhost:8000/'
-# google = 'http://www.google.com/'
-# proxy = 'http://localhost:8888/'
-# def send_request():
-#     url = proxy
-#     response = urllib.request.urlopen(url)
-#     print(response.read().decode())
-#
-# if __name__ == '__main__':
-#     send_request()
-
-
 import socket
 import sys
+from bs4 import BeautifulSoup
+import urllib.parse
+
 
 def send_request(proxy_ip, server_ip, port, path):
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -23,11 +12,18 @@ def send_request(proxy_ip, server_ip, port, path):
     client_socket.send(request.encode())
 
     response = client_socket.recv(4096)
+    html_content = b''
     while response:
-        print(response.decode(), end='')
+        html_content += response
         response = client_socket.recv(4096)
 
+    print(html_content)
     client_socket.close()
+
+    soup = BeautifulSoup(html_content, 'html.parser')
+    links = [urllib.parse.urljoin(f'http://{server_ip}', link.get('href')) for link in soup.find_all('a', href=True)]
+
+    return links
 
 if __name__ == '__main__':
     if len(sys.argv) < 5:
@@ -39,4 +35,8 @@ if __name__ == '__main__':
     port = int(sys.argv[3])
     path = sys.argv[4]
 
-    send_request(proxy_ip, server_ip, port, path)
+    links = send_request(proxy_ip, server_ip, port, path)
+
+    for link in links:
+        print(f"Sending request to: {link}")
+        send_request(proxy_ip, urllib.parse.urlparse(link).hostname, port, urllib.parse.urlparse(link).path)

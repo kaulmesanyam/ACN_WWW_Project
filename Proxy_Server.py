@@ -11,7 +11,7 @@ def handle_client(client_socket):
     print(f'command: {command}')
     if command == 'GET':
         host = request.split('\r\n')[1].split(' ')[1]
-        port = 80
+        port = 6789
 
         print(f'host: {host}  | port: {port}')
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

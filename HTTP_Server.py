@@ -2,7 +2,7 @@ import socket
 import threading
 import os
 
-
+PORT = 6789
 def handle_client(client_socket):
     request = client_socket.recv(4096).decode()
 
@@ -22,12 +22,12 @@ def handle_client(client_socket):
 
 
 def run_server():
-    server_address = ('127.0.0.1', 6789)
+    server_address = ('127.0.0.1', PORT)
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(server_address)
     server_socket.listen(5)
 
-    print('Web server is running on port 6789...')
+    print(f'Web server is running on port {PORT}...')
 
     while True:
         client_socket, addr = server_socket.accept()
