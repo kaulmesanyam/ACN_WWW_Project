@@ -14,10 +14,10 @@ def send_request(proxy_ip, server_ip, port, path):
     response = client_socket.recv(4096)
     html_content = b''
     while response:
+        print(response)
         html_content += response
         response = client_socket.recv(4096)
 
-    print(html_content)
     client_socket.close()
 
     soup = BeautifulSoup(html_content, 'html.parser')
