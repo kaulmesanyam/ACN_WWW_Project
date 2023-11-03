@@ -2,6 +2,7 @@ import socket
 import threading
 
 PORT = 8888
+
 def handle_client(client_socket):
     request = client_socket.recv(4096).decode()
     print(request)
@@ -11,11 +12,18 @@ def handle_client(client_socket):
     print(f'command: {command}')
     if command == 'GET':
         host = request.split('\r\n')[1].split(' ')[1]
-        port = 80
 
-        print(f'host: {host}  | port: {port}')
+        parts = host.split(':')
+        if len(parts) == 2:
+            server_ip = parts[0]
+            port = int(parts[1])
+        else:
+            server_ip = parts[0]
+            port = 80
+
+        print(f'host: {server_ip}  | port: {port}')
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.connect((host, port))
+        server_socket.connect((server_ip, port))
 
         server_socket.sendall(request.encode())
 

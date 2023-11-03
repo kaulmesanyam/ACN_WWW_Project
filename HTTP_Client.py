@@ -31,12 +31,24 @@ if __name__ == '__main__':
         sys.exit(1)
 
     proxy_ip = sys.argv[1]
-    server_ip = sys.argv[2]
+    host = sys.argv[2]
     port = int(sys.argv[3])
     path = sys.argv[4]
 
-    links = send_request(proxy_ip, server_ip, port, path)
+    server_ip = '127.0.0.1'
+    server_port = 80
+
+    parts = host.split(':')
+    if len(parts) == 2:
+        server_ip = parts[0]
+        server_port = int(parts[1])
+    else:
+        server_ip = parts[0]
+        server_port = 80
+
+    links = send_request(proxy_ip, host, port, path)
 
     for link in links:
         print(f"Sending request to: {link}")
-        send_request(proxy_ip, urllib.parse.urlparse(link).hostname, port, urllib.parse.urlparse(link).path)
+        host = urllib.parse.urlparse(link).hostname + ":" + str(server_port)
+        send_request(proxy_ip, host, port, urllib.parse.urlparse(link).path)
