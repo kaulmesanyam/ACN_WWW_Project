@@ -2,7 +2,8 @@ import socket
 import threading
 
 PORT = 7777
-BLACKLIST = {'www.example.com', 'www.blockedwebsite.com'}
+BLACKLIST = {'www.blockedwebsite.com'}
+CENSORED = {'Example'}
 
 def handle_client(client_socket):
     request = client_socket.recv(4096).decode()
@@ -13,7 +14,7 @@ def handle_client(client_socket):
     print(f'command: {command}')
     if command == 'GET':
         host = request.split('\r\n')[1].split(' ')[1]
-
+        request = f"GET / HTTP/1.0\r\nHost: {host}\r\n\r\n"
         parts = host.split(':')
         if len(parts) == 2:
             server_ip = parts[0]
@@ -36,11 +37,17 @@ def handle_client(client_socket):
             server_socket.sendall(request.encode())
 
             response = server_socket.recv(4096)
+            total = b''
             while response:
                 print(response)
-                client_socket.sendall(response)
+                total = total + response
                 response = server_socket.recv(4096)
 
+            filtered = ''
+            for word in CENSORED:
+                filtered = total.decode().replace(word, len(word)*'X')
+            encoded = filtered.encode()
+            client_socket.sendall(encoded)
             client_socket.close()
             server_socket.close()
     else:

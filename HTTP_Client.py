@@ -8,7 +8,7 @@ def send_request(proxy_ip, server_ip, port, path):
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((proxy_ip, port))
 
-    request = f"GET {path} HTTP/1.1\r\nHost: {server_ip}\r\n\r\n"
+    request = f"GET {path} HTTP/1.0\r\nHost: {server_ip}\r\n\r\n"
     client_socket.send(request.encode())
 
     response = client_socket.recv(4096)
