@@ -65,6 +65,15 @@ def plot_user_website_counts(user_website_counts):
     plt.xticks(rotation=0)
     plt.show()
 
+def plot_total_site_counts(website_counts):
+    labels = list(website_counts.keys())
+    sizes = list(website_counts.values())
+    fig1, ax1 = plt.subplots()
+    ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+    ax1.axis('equal')  # Equal aspect ratio ensures the pie chart is circular.
+    # Display the pie chart
+    plt.show()
+
 def get_website_counts_in_range(start_date, end_date, data):
     website_counts = {}
 
@@ -129,6 +138,7 @@ def plot():
     print(f'user website count in range - {user_website_count_in_range}')
 
     plot_user_website_counts(user_website_count_in_range)
+    plot_total_site_counts(site_access_count_map)
     plot_line_graphs()
 
 if __name__ == '__main__':
