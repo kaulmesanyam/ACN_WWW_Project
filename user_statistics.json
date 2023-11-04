@@ -1,0 +1,24 @@
+{
+  "127.0.0.1": {
+    "accessed_websites": [
+      {"website": "www.example.com", "access_date": "2023-11-01"},
+      {"website": "www.example.com", "access_date": "2023-11-02"},
+      {"website": "www.iith.ac.in", "access_date": "2023-11-03"}
+    ],
+    "website_access_count": {
+      "www.example.com": 2,
+      "www.iith.ac.in": 1
+    }
+  },
+  "192.168.0.1": {
+    "accessed_websites": [
+      {"website": "www.google.com", "access_date": "2023-11-01"},
+      {"website": "www.example.com", "access_date": "2023-11-02"},
+      {"website": "www.google.com", "access_date": "2023-11-03"}
+    ],
+    "website_access_count": {
+      "www.google.com": 2,
+      "www.example.com": 1
+    }
+  }
+}
