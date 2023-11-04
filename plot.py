@@ -62,7 +62,7 @@ def plot_user_website_counts(user_website_counts):
     plt.xlabel('User IP')
     plt.ylabel('Total Access Count')
     plt.title('Total Websites visited by each user')
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=0)
     plt.show()
 
 def get_website_counts_in_range(start_date, end_date, data):
@@ -78,13 +78,13 @@ def get_website_counts_in_range(start_date, end_date, data):
     return website_counts
 
 def get_week_range(date_str):
-    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+    date_obj = datetime.strptime(str(date_str), "%Y-%m-%d")
     start_of_week = date_obj - timedelta(days=date_obj.weekday())
     end_of_week = start_of_week + timedelta(days=6)
     return start_of_week, end_of_week
 
 def get_month_range(date_str):
-    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+    date_obj = datetime.strptime(str(date_str), "%Y-%m-%d")
     start_of_month = date_obj.replace(day=1)
     end_of_month = (start_of_month + timedelta(days=31)).replace(day=1) - timedelta(days=1)
     return start_of_month, end_of_month
@@ -94,11 +94,14 @@ def plot_line_graphs():
     user_website_count_in_range = get_user_website_counts_in_range('2023-11-01', '2023-11-02', data)
 
     # Get daily, weekly, and monthly total counts
-    daily_counts = get_website_counts_in_range('2023-11-01', '2023-11-02', data)
-    start_of_week, end_of_week = get_week_range('2023-11-01')
+    today_date = datetime.today().date()
+    yesterday_date = today_date - timedelta(days=1)
+    yesterday_date = str(yesterday_date)
+    daily_counts = get_website_counts_in_range(str(today_date), str(yesterday_date), data)
+    start_of_week, end_of_week = get_week_range(today_date)
     weekly_counts = get_website_counts_in_range(start_of_week.strftime("%Y-%m-%d"), end_of_week.strftime("%Y-%m-%d"),
                                                 data)
-    start_of_month, end_of_month = get_month_range('2023-11-01')
+    start_of_month, end_of_month = get_month_range(today_date)
     monthly_counts = get_website_counts_in_range(start_of_month.strftime("%Y-%m-%d"), end_of_month.strftime("%Y-%m-%d"),
                                                  data)
 
@@ -111,7 +114,7 @@ def plot_line_graphs():
     plt.plot(dates, total_counts, marker='o')
     plt.xlabel('Time Period')
     plt.ylabel('Total Count')
-    plt.title('Total Sites Visited by Each User')
+    plt.title('Total Sites Visited (Time period on x-axis is relative to today')
     plt.grid(True)
     plt.show()
 
