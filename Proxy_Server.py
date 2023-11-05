@@ -1,7 +1,7 @@
 import socket
 import threading
 
-PORT = 8888
+PORT = 7777
 
 def handle_client(client_socket):
     request = client_socket.recv(4096).decode()

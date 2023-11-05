@@ -4,16 +4,21 @@ from collections import defaultdict
 import json
 from _datetime import datetime
 
+# Define constants
 PORT = 8888
 BLACKLIST = {'www.blockedwebsite.com'}
 CENSORED = {'Example'}
 access_date = datetime.today().date()
 
+# File path for user statistics
 user_stats_file = 'user_statistics.json'
+
+# Function to save data to a JSON file
 def saveDatatoFile(data):
     with open(user_stats_file, 'w') as file:
         json.dump(data, file)
 
+# Function to load data from a JSON file
 def loadData(user_stats_file):
     with open(user_stats_file, 'r') as json_file:
         loaded_data = json.load(json_file)
@@ -21,8 +26,12 @@ def loadData(user_stats_file):
         print(f'data loaded from file - {loaded_data}')
         return loaded_data
 
+# Load existing user statistics or initialize with empty data
 user_statistics = loadData(user_stats_file)
+
+# Function to update user access statistics
 def update_statistics(client_address, accessed_website):
+    # Ignore requests to detectportal.firefox.com
     if accessed_website != "detectportal.firefox.com":
         client_address_str = str(client_address)
         if client_address_str not in user_statistics:
@@ -33,7 +42,7 @@ def update_statistics(client_address, accessed_website):
         user_statistics[client_address_str]['website_access_count'][accessed_website] += 1
         saveDatatoFile(user_statistics)
 
-# -----------------------------------------------------------------------------
+# Function to handle client connections
 def handle_client(client_socket, client_address):
     client_address = client_address[0]
     request = client_socket.recv(4096).decode()
@@ -88,7 +97,7 @@ def handle_client(client_socket, client_address):
 
     print("socket closed")
 
-
+# Function to run the proxy server
 def run_proxy():
     proxy_address = ('127.0.0.1', PORT)
     proxy_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -102,6 +111,6 @@ def run_proxy():
         client_handler = threading.Thread(target=handle_client, args=(client_socket, addr))
         client_handler.start()
 
-
+# Entry point of the script
 if __name__ == '__main__':
     run_proxy()

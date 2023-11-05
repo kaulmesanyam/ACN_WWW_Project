@@ -2,15 +2,19 @@ import json
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 
+# Define the file path for user statistics
 user_stats_file = 'user_statistics.json'
+
+# Function to calculate total access count for each website
 def get_total_access_count(user_stats_file):
     website_counts = {}
-    for data in   user_stats_file.values():
+    for data in user_stats_file.values():
         website_access_count = data.get("website_access_count", {})
         for website, count in website_access_count.items():
             website_counts[website] = website_counts.get(website, 0) + count
     return website_counts
 
+# Function to load data from a JSON file
 def loadData(user_stats_file):
     with open(user_stats_file, 'r') as json_file:
         loaded_data = json.load(json_file)
@@ -18,6 +22,7 @@ def loadData(user_stats_file):
         print(f'data loaded from file - {loaded_data}')
         return loaded_data
 
+# Function to get website access counts within a specified date range
 def get_website_counts_in_range(start_date, end_date, data):
     website_counts = {}
 
@@ -30,6 +35,7 @@ def get_website_counts_in_range(start_date, end_date, data):
                 website_counts[website] = website_counts.get(website, 0) + 1
     return website_counts
 
+# Function to get user-specific website access counts within a specified date range
 def get_user_website_counts_in_range(start_date, end_date, data):
     user_website_counts = {}
 
@@ -53,6 +59,7 @@ def get_user_website_counts_in_range(start_date, end_date, data):
 
     return user_website_counts
 
+# Function to plot bar chart showing total access counts for each user
 def plot_user_website_counts(user_website_counts):
     user_ips = list(user_website_counts.keys())
     total_access_counts = [data["total_access_count"] for data in user_website_counts.values()]
@@ -65,6 +72,7 @@ def plot_user_website_counts(user_website_counts):
     plt.xticks(rotation=0)
     plt.show()
 
+# Function to plot pie chart showing distribution of total website access counts
 def plot_total_site_counts(website_counts):
     labels = list(website_counts.keys())
     sizes = list(website_counts.values())
@@ -74,6 +82,7 @@ def plot_total_site_counts(website_counts):
     # Display the pie chart
     plt.show()
 
+# Function to get website access counts within a specified date range
 def get_website_counts_in_range(start_date, end_date, data):
     website_counts = {}
 
@@ -86,18 +95,21 @@ def get_website_counts_in_range(start_date, end_date, data):
                 website_counts[website] = website_counts.get(website, 0) + 1
     return website_counts
 
+# Function to get the start and end dates of the current week
 def get_week_range(date_str):
     date_obj = datetime.strptime(str(date_str), "%Y-%m-%d")
     start_of_week = date_obj - timedelta(days=date_obj.weekday())
     end_of_week = start_of_week + timedelta(days=6)
     return start_of_week, end_of_week
 
+# Function to get the start and end dates of the current month
 def get_month_range(date_str):
     date_obj = datetime.strptime(str(date_str), "%Y-%m-%d")
     start_of_month = date_obj.replace(day=1)
     end_of_month = (start_of_month + timedelta(days=31)).replace(day=1) - timedelta(days=1)
     return start_of_month, end_of_month
 
+# Function to plot line graphs showing total site access counts
 def plot_line_graphs():
     data = loadData(user_stats_file)
     user_website_count_in_range = get_user_website_counts_in_range('2023-11-01', '2023-11-02', data)
@@ -127,7 +139,7 @@ def plot_line_graphs():
     plt.grid(True)
     plt.show()
 
-
+# Main function to execute various functions
 def plot():
     data = loadData(user_stats_file)
     site_access_count_map = get_total_access_count(data)
